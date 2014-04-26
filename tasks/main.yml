@@ -1,6 +1,34 @@
-- name: Install rubies
-  shell: su -s /bin/bash -l -c 'source /etc/profile.d/rbenv-load.sh && rbenv-load && rbenv install {{item.version}}' {{user}}
-         executable=/bin/bash
-         creates=~{{user}}/.rbenv/versions/{{item.version}}
-  with_items: rubies
+- name: Install dependencies 
+  apt: pkg={{item}} state=present update_cache=yes cache_valid_time=3600
+  with_items: ruby.package_dependencies
+  when: ruby.package_dependencies is defined
 
+- name: Install ruby
+  shell: su -s /bin/bash -l -c 'source /etc/profile.d/rbenv-load.sh && rbenv-load && rbenv install {{ruby.version}}' {{user}}
+         executable=/bin/bash
+         creates={{rbenv_dir}}/versions/{{ruby.version}}/bin/ruby
+  register: install_ruby
+  when: ruby.present 
+
+- name: Create alias
+  shell: su -s /bin/bash -l -c 'ln -s {{rbenv_dir}}/versions/{{ruby.version}} {{rbenv_dir}}/versions/{{ruby.alias}}' {{user}}
+         creates={{rbenv_dir}}/versions/{{ruby.alias}}
+  when: ruby.present and ruby.alias is defined
+
+- name: Remove ruby
+  shell: su -s /bin/bash -l -c 'rm -rf {{rbenv_dir}}/versions/{{ruby.version}}' {{user}}
+         executable=/bin/bash
+         removes={{rbenv_dir}}/versions/{{ruby.version}}
+  register: remove_ruby 
+  when: not ruby.present
+
+- name: Remove alias
+  shell: su -s /bin/bash -l -c 'rm {{rbenv_dir}}/versions/{{ruby.alias}}' {{user}}
+         removes={{rbenv_dir}}/versions/{{ruby.alias}}
+  when: ruby.alias is defined and remove_ruby.changed
+
+- name: Set default
+  template: src=version
+            dest={{rbenv_dir}}/version
+            owner={{user}}
+  when: ruby.default is defined and ruby.default

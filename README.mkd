@@ -1,0 +1,57 @@
+Ansible Rbenv Ruby Role
+=======================
+
+This is a reusable ansible role which manages, (i.e. installs,
+removes, etc) ruby versions under Rbenv for a configurable user
+on Debian and Ubuntu Systems.
+
+This role depends on Rbenv beeing installed via the [Ansible Rbenv
+Role][].
+
+Parameters
+----------
+
+This role expects the `ruby.version` and `ruby.present` parameters. The
+`ruby.alias`, `ruby.package_dependencies` and `ruby.default` are optional.
+
+Here is an example YAML configuration: 
+
+      ruby:
+        version: 2.1.1
+        alias: 2.1
+        present: True
+        default: True
+
+The `examples/site.yml` file illustrates the parameters in
+context with the following section.
+
+
+Example Usage
+-------------
+
+Assuming that `test-server` will resolve to a machine (e.g. by
+defining it in `~/.ssh/config`) where the current user
+has ssh access though a ssh key, invoke 
+
+    ansible-playbook -i examples/hosts examples/site.yml
+
+This will ensure that MRI Ruby  2.1.1 is present and aliased as Version 2.1. It
+also sets Version 2.1.1 as the default. It installs JRuby 1.7.9 and ensures
+that Mri 2.1.0 is removed if it was installed. The target user `ubuntu` should
+have been setup for Rbenv with the [Ansible Rbenv Role].
+
+Supported Ansible Versions
+--------------------------
+
+This role was tested with ansible => 1.5.
+
+Supported Operating Systems
+---------------------------
+
+* Debian 7 Wheezy
+* Ubuntu 14.04 LTS Trusty
+* Ubuntu 12.04 LTS Precise
+
+
+  [Ansible Rbenv Role]: https://github.com/DrTom/ansible-role-rbenv
+

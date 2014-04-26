@@ -1,5 +1,6 @@
 user: root
-rubies: 
-  - version: 2.1.1
-    
+rbenv_dir: ~{{user}}/.rbenv
 
+ruby:
+  present: True
+  default: False

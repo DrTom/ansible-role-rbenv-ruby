@@ -1,0 +1,25 @@
+- hosts: test-server
+
+  roles: 
+
+    - role: ../../
+      user: ubuntu
+      ruby:
+        version: jruby-1.7.9
+        alias: jruby-1.7
+        present: True
+        package_dependencies: [openjdk-7-jdk]
+
+    - role: ../../
+      user: ubuntu
+      ruby:
+        version: 2.1.0
+        present: False
+
+    - role: ../../
+      user: ubuntu
+      ruby:
+        version: 2.1.1
+        alias: 2.1
+        present: True
+        default: True
