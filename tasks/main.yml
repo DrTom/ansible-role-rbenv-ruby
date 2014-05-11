@@ -11,8 +11,10 @@
   when: ruby.present 
 
 - name: Create alias
-  shell: su -s /bin/bash -l -c 'ln -s {{rbenv_dir}}/versions/{{ruby.version}} {{rbenv_dir}}/versions/{{ruby.alias}}' {{user}}
-         creates={{rbenv_dir}}/versions/{{ruby.alias}}
+  file: state=link
+        dest={{rbenv_dir}}/versions/{{ruby.alias}}
+        src={{rbenv_dir}}/versions/{{ruby.version}}
+        owner={{user}}
   when: ruby.present and ruby.alias is defined
 
 - name: Remove ruby
