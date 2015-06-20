@@ -12,7 +12,7 @@ Role][].
 Usage
 -----
 
-See <https://github.com/cider-ci/cider-ci_ansible-setup> e.g. 
+See <https://github.com/cider-ci/cider-ci_ansible-setup> e.g.
 
 
 

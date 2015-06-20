@@ -1,4 +1,4 @@
-- name: Install dependencies 
+- name: Install dependencies
   apt: pkg={{item}} state=present update_cache=yes cache_valid_time=3600
   with_items: ruby.package_dependencies
   when: ruby.package_dependencies is defined
@@ -8,7 +8,7 @@
          executable=/bin/bash
          creates={{rbenv_dir}}/versions/{{ruby.version}}/bin/ruby
   register: install_ruby
-  when: ruby.present 
+  when: ruby.present
 
 - name: Create alias
   file: state=link
@@ -21,7 +21,7 @@
   shell: su -s /bin/bash -l -c 'rm -rf {{rbenv_dir}}/versions/{{ruby.version}}' {{user}}
          executable=/bin/bash
          removes={{rbenv_dir}}/versions/{{ruby.version}}
-  register: remove_ruby 
+  register: remove_ruby
   when: not ruby.present
 
 - name: Remove alias
