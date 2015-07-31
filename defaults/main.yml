@@ -4,3 +4,5 @@ rbenv_dir: ~{{user}}/.rbenv
 ruby:
   present: True
   default: False
+
+rbenv_change_owner_post_setup: "{{user}}"

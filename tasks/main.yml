@@ -3,6 +3,13 @@
   with_items: ruby.package_dependencies
   when: ruby.package_dependencies is defined
 
+- file:
+    path: "{{rbenv_dir}}"
+    state: directory
+    owner: "{{user}}"
+    group: "{{user}}"
+    recurse: yes
+
 - name: Install ruby
   shell: su -s /bin/bash -l -c 'source /etc/profile.d/rbenv-load.sh && rbenv-load && rbenv install {{ruby.version}}' {{user}}
          executable=/bin/bash
@@ -18,19 +25,23 @@
   when: ruby.present and ruby.alias is defined
 
 - name: Remove ruby
-  shell: su -s /bin/bash -l -c 'rm -rf {{rbenv_dir}}/versions/{{ruby.version}}' {{user}}
-         executable=/bin/bash
-         removes={{rbenv_dir}}/versions/{{ruby.version}}
+  shell: rm -rf {{rbenv_dir}}/versions/{{ruby.version}}
   register: remove_ruby
   when: not ruby.present
 
 - name: Remove alias
-  shell: su -s /bin/bash -l -c 'rm {{rbenv_dir}}/versions/{{ruby.alias}}' {{user}}
-         removes={{rbenv_dir}}/versions/{{ruby.alias}}
+  shell: rm {{rbenv_dir}}/versions/{{ruby.alias}}
   when: ruby.alias is defined and remove_ruby.changed
 
 - name: Set default
   template: src=version
             dest={{rbenv_dir}}/version
-            owner={{user}}
+            owner=root
+            mode=0755
   when: ruby.default is defined and ruby.default
+
+- name: Change owner post setup
+  file: path={{rbenv_dir}}
+        owner={{rbenv_change_owner_post_setup}}
+        group={{rbenv_change_owner_post_setup}}
+        state=directory
