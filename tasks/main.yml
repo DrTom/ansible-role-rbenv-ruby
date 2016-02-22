@@ -1,9 +1,13 @@
 - name: Install dependencies
-  apt: pkg={{item}} state=present update_cache=yes cache_valid_time=3600
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
   with_items: ruby.package_dependencies
-  when: ruby.package_dependencies is defined
 
-- file:
+- name: Adjust ownder of .rbenv
+  file:
     path: "{{rbenv_dir}}"
     state: directory
     owner: "{{user}}"

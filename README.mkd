@@ -12,14 +12,14 @@ Role][].
 Usage
 -----
 
-See <https://github.com/cider-ci/cider-ci_ansible-setup> e.g.
+See <https://github.com/cider-ci/cider-ci_deploy> e.g.
 
 
 
 Supported Ansible Versions
 --------------------------
 
-This role is used frequently with Ansible => 1.8
+This role is used frequently with Ansible => 2.0
 
 
 Supported Operating Systems
